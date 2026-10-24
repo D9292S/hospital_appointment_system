@@ -28,7 +28,6 @@ def list_doctors(specialization: str | None = None, db: Session = Depends(get_db
 @router.get("/doctors/{doctor_id}", response_model=DoctorRead)
 def get_doctor(doctor_id: int, db: Session = Depends(get_db)):
     doctor = db.get(Doctor, doctor_id)
-    # Intentional issue A2: missing not-found handling.
 
     return doctor
 

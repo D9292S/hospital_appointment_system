@@ -5,7 +5,7 @@ from pydantic import BaseModel, ConfigDict, Field
 class DoctorCreate(BaseModel):
     name: str = Field(min_length=2, max_length=100)
     specialization: str = Field(min_length=2, max_length=100)
-    consultation_fee: float
+    consultation_fee: float 
 
 
 class DoctorRead(BaseModel):
