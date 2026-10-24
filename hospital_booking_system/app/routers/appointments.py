@@ -35,6 +35,11 @@ def book_appointment(payload: AppointmentCreate, db: Session = Depends(get_db)):
         fee=doctor.consultation_fee,
         status="booked",
     )
+    
+    current_time = datetime.now()
+    
+    if appointment.appointment_time<current_time:
+        raise HTTPException(status_code=422, detail="This date is passed")
     db.add(appointment)
     db.commit()
     db.refresh(appointment)
@@ -67,6 +72,7 @@ def cancel_appointment(appointment_id: int, db: Session = Depends(get_db)):
 
     appointment.status = "cancelled"
     # Intentional issue B1: cancellation is not committed to the database.
+    db.commit()
     db.refresh(appointment)
     return appointment
 
@@ -101,6 +107,6 @@ def update_status(
     # Intentional issue C2: caller can alter any appointment because there is no
     # patient identity/authorization check in this educational starter.
     appointment.status = status
-    db.commit()
+    db.commit() 
     db.refresh(appointment)
     return appointment
