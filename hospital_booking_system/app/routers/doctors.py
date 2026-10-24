@@ -28,7 +28,8 @@ def list_doctors(specialization: str | None = None, db: Session = Depends(get_db
 @router.get("/doctors/{doctor_id}", response_model=DoctorRead)
 def get_doctor(doctor_id: int, db: Session = Depends(get_db)):
     doctor = db.get(Doctor, doctor_id)
-
+    if doctor.id!=doctor_id:
+        raise HTTPException(status_code=404, detail="doctor id does not exist")
     return doctor
 
 
