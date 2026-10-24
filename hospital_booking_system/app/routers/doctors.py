@@ -7,8 +7,8 @@ from app.schemas import DoctorCreate, DoctorRead, PatientCreate, PatientRead
 
 router = APIRouter(tags=["Doctors and Patients"])
 
-
 @router.post("/doctors", response_model=DoctorRead, status_code=status.HTTP_201_CREATED)
+
 def create_doctor(payload: DoctorCreate, db: Session = Depends(get_db)):
     doctor = Doctor(**payload.model_dump())
     db.add(doctor)
@@ -28,7 +28,8 @@ def list_doctors(specialization: str | None = None, db: Session = Depends(get_db
 @router.get("/doctors/{doctor_id}", response_model=DoctorRead)
 def get_doctor(doctor_id: int, db: Session = Depends(get_db)):
     doctor = db.get(Doctor, doctor_id)
-    # Intentional issue A2: missing not-found handling.
+    if doctor.id!=doctor_id:
+        raise HTTPException(status_code=404, detail="doctor id does not exist")
     return doctor
 
 
