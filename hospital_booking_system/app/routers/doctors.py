@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from app.database import get_db
@@ -7,8 +7,8 @@ from app.schemas import DoctorCreate, DoctorRead, PatientCreate, PatientRead
 
 router = APIRouter(tags=["Doctors and Patients"])
 
+@router.post("/doctors", response_model=DoctorRead, status_code=status.HTTP_201_CREATED)
 
-@router.post("/doctors", response_model=DoctorRead, status_code=201)
 def create_doctor(payload: DoctorCreate, db: Session = Depends(get_db)):
     doctor = Doctor(**payload.model_dump())
     db.add(doctor)
